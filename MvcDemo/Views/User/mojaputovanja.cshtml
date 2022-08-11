@@ -1,0 +1,135 @@
+﻿
+@{
+    ViewData["Title"] = "mojaputovanja";
+}
+@if (!User.IsInRole("ADMIN"))
+{
+
+    <h1>moja putovanja</h1>
+
+    <div class="float-container">
+
+        <div class="float-child">
+
+            <table id="tblTravel">
+                <tr>
+                    <th> Name </th>
+                    <th> Duration </th>
+                    <th> Price </th>
+
+                </tr>
+            </table>
+
+
+
+        </div>
+        <div class="float-child">
+            <img src="~/image/mojaputovanja.jpg" width="700px" height="500px" />
+
+        </div>
+        <div class="float-child">
+
+        </div>
+
+    </div>
+    <style>
+
+        .float-container {
+            border: 3px solid #fff;
+            padding: 20px;
+        }
+
+        .float-child {
+            width: 30%;
+            float: left;
+            padding: 20px;
+        }
+
+        .collapsible {
+            background-color: #777;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+        }
+
+            .active, .collapsible:hover {
+                background-color: #555;
+            }
+
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #f1f1f1;
+
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #1a8cff;
+            color: white;
+        }
+
+    </style>
+
+
+    <script type="text/javascript">
+
+        'use strict';
+
+
+       
+       function timeRefresh(time) {
+         setTimeout("location.reload(true);", time);
+       }
+        function remove() {
+            var id = event.target.id;
+            console.log(id);
+            axios.delete(`/api/putovanja/removefavorite/${id}`);
+           
+         timeRefresh(1000);
+          
+
+        }
+        function create(odg) {
+            var tabl = document.getElementById("tblTravel");
+            for (let i = 0; i < odg.length; i++) {
+                var red = tabl.insertRow();
+                var naz_stupac = red.insertCell();
+                var trajanje_stupac = red.insertCell();
+                var cijena_stupac = red.insertCell();
+                naz_stupac.innerHTML = odg[i].name;
+                trajanje_stupac.innerHTML = odg[i].duration;
+                cijena_stupac.innerHTML = odg[i].price;
+                var gumb = document.createElement("button");
+                gumb.id = odg[i].id;
+                var gumb_stupac = red.insertCell();
+                gumb.innerHTML = "Remove";
+                gumb_stupac.appendChild(gumb);
+                gumb.style = "background-color:#1a8cff; color:white; margin: 4px 0; border: none; border-radius: 6px; cursor: pointer; width: 60px;";
+                gumb.addEventListener("click", remove, false);
+            }
+
+        }
+
+        axios.get('/api/MOJAPUTOVANJA/moji').then(response => create(response.data));
+
+
+
+
+    </script>
+
+}
